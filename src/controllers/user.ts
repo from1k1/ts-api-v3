@@ -34,7 +34,7 @@ export const getVerify = (req: Request, res: Response) => {
 
 export const getInfo = async (req: Request, res: Response) => {
     const session = await getManager()
-        .createQueryBuilder(Session,"session")
+        .createQueryBuilder(Session, "session")
         .where("session.token = :token", { token: req.headers.authorization })
         .getOne();
     console.log(session);
@@ -58,10 +58,8 @@ export const postSignin = async (req: Request, res: Response) => {
             console.log(session);
             try {
                 const isSessionExist = await getManager()
-                    .createQueryBuilder()
-                    .select("session")
-                    .from(Session, "session")
-                    .where("session.token", { token: session.token })
+                    .createQueryBuilder(Session, "session")
+                    .where("session.token = :token", { token: req.headers.authorization })
                     .getOne();
 
                 if (isSessionExist) {
