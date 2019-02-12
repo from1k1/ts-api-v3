@@ -20,7 +20,6 @@ export const getUserlist = async (req: Request, res: Response) => {
         userlist.map(val => {
             val.profile_pic = "http://localhost:1337/static/user_pics/" + val.profile_pic;
         })
-        console.log(userlist);
         res.send(userlist);
     } catch (err) {
         res.send(err)
@@ -37,7 +36,6 @@ export const getInfo = async (req: Request, res: Response) => {
         .createQueryBuilder(Session, "session")
         .where("session.token = :token", { token: req.headers.authorization })
         .getOne();
-    console.log(session);
     const user = await getConnection().getRepository(User).findByIds([session.user]);
     user[0].profile_pic = "http://localhost:1337/static/user_pics/" + user[0].profile_pic;
     res.send(user[0]);
@@ -55,7 +53,6 @@ export const postSignin = async (req: Request, res: Response) => {
         if (user.login) {
             session.user = user.id;
             session.token = generateToken(user.id, user.login);
-            console.log(session);
             try {
                 const isSessionExist = await getManager()
                     .createQueryBuilder(Session, "session")
