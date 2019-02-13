@@ -11,13 +11,15 @@ export const verify: RequestHandlerParams = (req: Request, res: Response, next: 
         res.send({ success: false, err });
     }
 }
-export const verifyIO = (socket: any, next) => {
+export function verifyIO(socket: any, next) {
     try {
-        const token = socket.client.request;
-        console.log(socket);
+        const token = socket.handshake.query.token;
+        console.log(socket.handshake.query.token);
         jwt.verify(token, 'SUPADUPASECRET');
-        next();
+        console.log("Token for socket verified");
+        return next();
     } catch (err) {
-        next();
+        console.log("Token for socket NOT verified");
+        return next();
     }
 }

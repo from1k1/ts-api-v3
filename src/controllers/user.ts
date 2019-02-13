@@ -56,7 +56,7 @@ export const postSignin = async (req: Request, res: Response) => {
             try {
                 const isSessionExist = await getManager()
                     .createQueryBuilder(Session, "session")
-                    .where("session.token = :token", { token: req.headers.authorization })
+                    .where("session.user = :user", { user: user.id })
                     .getOne();
 
                 if (isSessionExist) {
@@ -65,7 +65,7 @@ export const postSignin = async (req: Request, res: Response) => {
                         .createQueryBuilder()
                         .update(Session)
                         .set(session)
-                        .where("session.userId = :id", { id: user.id })
+                        .where("session.user = :user", { user: user.id })
                         .execute();
 
                 } else {
@@ -85,7 +85,7 @@ export const postSignin = async (req: Request, res: Response) => {
             res.redirect(301, `http://localhost:3001/redirect.html?id=${user.id}&token=${session.token}`);
         }
     } catch (err) {
-        res.send({ success: false, ...err })
+        res.send({ success: false, err })
     }
 }
 
